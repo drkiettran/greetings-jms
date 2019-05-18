@@ -5,6 +5,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
@@ -34,6 +35,12 @@ public class Sender {
 
 		producer.send(message);
 		LOGGER.info("Sent '{}'", message.getText());
+	}
+
+	public void send(Message msg) throws JMSException {
+		ObjectMessage message = session.createObjectMessage(msg);
+		producer.send(message);
+		LOGGER.info("Sent '{}'", msg.toString());
 	}
 
 	public void close() throws JMSException {

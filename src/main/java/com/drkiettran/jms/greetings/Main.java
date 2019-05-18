@@ -14,21 +14,27 @@ public class Main {
 
 	public static void main(String... args) throws JMSException, InterruptedException, UnknownHostException {
 		if (args.length < 1) {
-			LOGGER.info("**** java com.drkiettran.jms.greetings.Main server ****");
+			LOGGER.info(
+					"**** java -cp ./target/greetings-jms-jar-with-dependencies.jar com.drkiettran.jms.greetings.Main server ****");
 			return;
 		}
 
 		LOGGER.info("mode: {}", args[0]);
 		if (args[0].equalsIgnoreCase("client")) {
 			if (args.length < 2) {
-				LOGGER.info("**** java com.drkiettran.jms.greetings.Main client <text> ****");
+				LOGGER.info(
+						"**** java -cp ./target/greetings-jms-jar-with-dependencies.jar com.drkiettran.jms.greetings.Main client <text> ****");
 				return;
 			}
-			new Client(TO_SERVER_QUEUE, FROM_SERVER_QUEUE, args[1]);
+			com.drkiettran.jms.greetings.Message msg = new com.drkiettran.jms.greetings.Message();
+			msg.setMessage("Greeings!");
+			msg.setName(args[1]);
+			new Client(TO_SERVER_QUEUE, FROM_SERVER_QUEUE, msg);
 		} else if (args[0].equalsIgnoreCase("server")) {
 			new Server(TO_SERVER_QUEUE, FROM_SERVER_QUEUE);
 		} else {
-			LOGGER.info(">>> java com.drkiettran.jms.greetings..Main server | client <text> <<<");
+			LOGGER.info(
+					">>> java -cp ./target/greetings-jms-jar-with-dependencies.jar com.drkiettran.jms.greetings..Main server | client <text> <<<");
 		}
 	}
 }

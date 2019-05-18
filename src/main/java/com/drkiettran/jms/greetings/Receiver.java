@@ -6,6 +6,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
@@ -29,15 +30,27 @@ public class Receiver {
 		consumer = session.createConsumer(destination);
 	}
 
-	public String receive() throws JMSException {
+//	public String receive() throws JMSException {
+//		Message message = consumer.receive();
+//
+//		if (message instanceof TextMessage) {
+//			TextMessage textMessage = (TextMessage) message;
+//			LOGGER.info("Received message '{}'", textMessage.getText());
+//			return textMessage.getText();
+//		}
+//		return "";
+//	}
+
+	public com.drkiettran.jms.greetings.Message receive() throws JMSException {
 		Message message = consumer.receive();
 
-		if (message instanceof TextMessage) {
-			TextMessage textMessage = (TextMessage) message;
-			LOGGER.info("Received message '{}'", textMessage.getText());
-			return textMessage.getText();
+		if (message instanceof ObjectMessage) {
+			ObjectMessage objectMessage = (ObjectMessage) message;
+			com.drkiettran.jms.greetings.Message msg = (com.drkiettran.jms.greetings.Message) objectMessage.getObject();
+			LOGGER.info("Received message '{}'", msg.toString());
+			return msg;
 		}
-		return "";
+		return null;
 	}
 
 	public void close() throws JMSException {

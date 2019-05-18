@@ -16,20 +16,17 @@ public class Server {
 		Greetings greetings = new Greetings();
 
 		while (true) {
-			String msg = receiver.receive();
+			com.drkiettran.jms.greetings.Message msg = receiver.receive();
 
 			LOGGER.info("Received message '{}'", msg);
 
 			Sender sender = new Sender(ActiveMQConnection.DEFAULT_BROKER_URL, responseSubject);
-			String returnMsg = greetings.hello(msg);
-			sender.send(returnMsg);
-			LOGGER.info("Server responds '{}'", returnMsg);
+			msg.setMessage(greetings.hello(msg.getName()));
+			msg.setName("JMS Server");
+			sender.send(msg);
+			LOGGER.info("Server responds '{}'", msg);
 			sender.close();
-			if (msg.equalsIgnoreCase("exit")) {
-				break;
-			}
 		}
 
-		receiver.close();
 	}
 }
